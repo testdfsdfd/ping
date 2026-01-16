@@ -1,0 +1,33 @@
+name: Website Pinger
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install Puppeteer
+        run: npm install puppeteer
+
+      - name: Ping site with JS wait
+        run: |
+          node -e "
+          const puppeteer = require('puppeteer');
+          (async () => {
+            const browser = await puppeteer.launch();
+            const page = await browser.newPage();
+            while (true) {
+              console.log('Ping', new Date());
+              await page.goto('https://stox.bedwars.workers.dev', { waitUntil: 'networkidle2' });
+              const status = await page.evaluate(() => document.readyState);
+              console.log('Page readyState:', status);
+              await new Promise(r => setTimeout(r, 30000));
+            }
+            await browser.close();
+          })();
+          "
