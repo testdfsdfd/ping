@@ -14,5 +14,5 @@ jobs:
             echo "Ping $(date)"
             status=$(curl -o /dev/null -s -w "%{http_code}" https://stox.bedwars.workers.dev)
             echo "HTTP status code: $status"
-            sleep 30
+            sleep 10
           done
